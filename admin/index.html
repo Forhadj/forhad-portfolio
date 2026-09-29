@@ -1,48 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard | Forhad Hossain</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/style.css">
-<style>
-  .upload-file-item { background:#1c1813; border:1px solid #2a2520; border-radius:8px; padding:12px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; }
-  .file-item-name { flex:1; font-family:'JetBrains Mono'; font-size:.8rem; color:#b8b0a4; }
-  .file-item-actions { display:flex; gap:8px; }
-  .file-item-btn { padding:4px 10px; font-size:.7rem; border-radius:4px; border:none; cursor:pointer; transition:all .2s; }
-  .file-item-preview { background:#ffb238; color:#080705; }
-  .file-item-preview:hover { background:#fbbf24; }
-  .file-item-edit { background:#2a2520; color:#b8b0a4; border:1px solid #ffb238; }
-  .file-item-edit:hover { background:#3a3520; }
-  .file-item-delete { background:#e85d5d; color:#f5f0e8; }
-  .file-item-delete:hover { background:#d94d4d; }
-  
-  .code-editor { background:#1c1813; border:1px solid #2a2520; border-radius:8px; padding:12px; margin-bottom:16px; }
-  .editor-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #2a2520; }
-  .editor-title { font-family:'JetBrains Mono'; font-size:.85rem; color:#ffb238; }
-  .editor-actions { display:flex; gap:8px; }
-  .editor-actions button { padding:6px 12px; font-size:.7rem; border-radius:4px; border:1px solid #2a2520; background:transparent; color:#b8b0a4; cursor:pointer; }
-  .editor-actions button:hover { border-color:#ffb238; color:#ffb238; }
-  
-  .file-editor-textarea { width:100%; min-height:300px; background:#080705; border:1px solid #2a2520; border-radius:6px; padding:12px; color:#b8b0a4; font-family:'JetBrains Mono'; font-size:.8rem; resize:vertical; }
-  .file-editor-textarea:focus { border-color:#ffb238; outline:none; }
-  
-  .preview-frame { width:100%; height:500px; border:1px solid #2a2520; border-radius:8px; background:#fff; }
-  
-  .tab-content { display:none; }
-  .tab-content.active { display:block; }
-  
-  .upload-progress { background:#16130e; border:1px solid #2a2520; border-radius:8px; padding:16px; margin-bottom:16px; }
-  .progress-bar { width:100%; height:8px; background:#1c1813; border-radius:4px; overflow:hidden; margin-bottom:8px; }
-  .progress-fill { height:100%; background:linear-gradient(90deg, #ffb238, #fbbf24); width:0%; transition:width .3s; }
-  .progress-text { font-size:.8rem; color:#b8b0a4; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Forhad Hossain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .upload-file-item {
+      background:#1c1813; border:1px solid #2a2520; border-radius:8px; padding:12px;
+      margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .file-item-name { flex:1; font-family:'JetBrains Mono'; font-size:.8rem; color:#b8b0a4; word-break:break-all; }
+    .file-item-actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .file-item-btn { padding:6px 10px; font-size:.7rem; border-radius:4px; border:none; cursor:pointer; }
+    .file-item-preview { background:#ffb238; color:#080705; }
+    .file-item-preview:hover { background:#fbbf24; }
+    .file-item-edit { background:#2a2520; color:#b8b0a4; border:1px solid #ffb238; }
+    .file-item-edit:hover { background:#3a3520; }
+    .file-item-delete { background:#e85d5d; color:#f5f0e8; }
+    .file-item-delete:hover { background:#d94d4d; }
+    .code-editor { background:#1c1813; border:1px solid #2a2520; border-radius:8px; padding:12px; margin-bottom:16px; }
+    .editor-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #2a2520; }
+    .editor-title { font-family:'JetBrains Mono'; font-size:.85rem; color:#ffb238; }
+    .editor-actions { display:flex; gap:8px; }
+    .editor-actions button { padding:6px 12px; font-size:.7rem; border-radius:4px; border:1px solid #2a2520; background:transparent; color:#b8b0a4; cursor:pointer; }
+    .editor-actions button:hover { border-color:#ffb238; color:#ffb238; }
+    .file-editor-textarea { width:100%; min-height:300px; background:#080705; border:1px solid #2a2520; border-radius:6px; padding:12px; color:#b8b0a4; font-family:'JetBrains Mono'; font-size:.8rem; resize:vertical; }
+    .preview-frame { width:100%; height:500px; border:1px solid #2a2520; border-radius:8px; background:#fff; border:0; }
+    .upload-progress { background:#16130e; border:1px solid #2a2520; border-radius:8px; padding:16px; margin-bottom:16px; }
+    .progress-bar { width:100%; height:8px; background:#1c1813; border-radius:4px; overflow:hidden; margin-bottom:8px; }
+    .progress-fill { height:100%; background:linear-gradient(90deg, #ffb238, #fbbf24); width:0%; transition:width .3s; }
+    .progress-text { font-size:.8rem; color:#b8b0a4; }
+    .profile-img-preview, .img-preview { width:200px; height:200px; object-fit:cover; border-radius:8px; border:1px solid #2a2520; overflow:hidden; }
+    .profile-img-placeholder, .img-preview-placeholder { width:200px; height:200px; background:#1c1813; border:1px dashed #2a2520; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#5a544c; }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+  </style>
 </head>
 <body class="admin-body">
 <button class="admin-mobile-toggle" id="mobileToggle">&#9776;</button>
 <div class="admin-sidebar-overlay" id="sidebarOverlay"></div>
+
 <div class="admin-layout">
   <aside class="admin-sidebar" id="adminSidebar">
     <div class="admin-logo">forhad_admin_</div>
@@ -67,29 +67,19 @@
       <div class="admin-user-pill"><span>&#128100;</span><span id="adminUser">admin</span></div>
     </div>
 
-    <!-- DASHBOARD TAB -->
     <div class="admin-tab-panel active" id="tab-dashboard">
       <div class="admin-stats-grid">
         <div class="admin-stat-card"><div class="admin-stat-value" id="statTotal">0</div><div class="admin-stat-label">Total Projects</div></div>
         <div class="admin-stat-card"><div class="admin-stat-value" id="statLive">0</div><div class="admin-stat-label">Live</div></div>
-        <div class="admin-stat-card"><div class="admin-stat-value" id="statWip">0</div><div class="admin-stat-label">Work in Progress</div></div>
+        <div class="admin-stat-card"><div class="admin-stat-value" id="statWip">0</div><div class="admin-stat-label">WIP</div></div>
         <div class="admin-stat-card"><div class="admin-stat-value" id="statImg">0</div><div class="admin-stat-label">With Image</div></div>
       </div>
       <div class="admin-card">
         <div class="admin-card-title">Recent Projects</div>
         <div id="recentProjects"><div class="admin-empty-state">No projects yet.</div></div>
       </div>
-      <div class="admin-card">
-        <div class="admin-card-title" style="display:block">How it works</div>
-        <p style="color:#b8b0a4;font-size:.88rem;line-height:1.8">
-          Every save here commits straight to your GitHub repo. Netlify detects the push
-          and rebuilds the site automatically (usually 20&ndash;40 seconds). After that,
-          <b style="color:#ffb238">every visitor around the world sees your new content.</b>
-        </p>
-      </div>
     </div>
 
-    <!-- PROJECTS TAB -->
     <div class="admin-tab-panel" id="tab-projects">
       <div class="admin-card">
         <div class="admin-card-title"><span>All Projects</span><button class="admin-btn admin-btn-primary" id="addProjectBtn">+ Add Project</button></div>
@@ -104,15 +94,14 @@
       </div>
     </div>
 
-    <!-- WEB UPLOAD TAB (NEW) -->
     <div class="admin-tab-panel" id="tab-upload">
       <div class="admin-card">
         <div class="admin-card-title">Upload Website Files</div>
-        
+
         <div style="margin-bottom:20px; padding:20px; background:#1c1813; border:2px dashed #2a2520; border-radius:8px; text-align:center;">
-          <input type="file" id="websiteFileInput" multiple accept=".html,.css,.js,.json,.xml,.txt,.md,.svg,.woff,.woff2" style="display:none">
-          <button class="admin-btn admin-btn-primary" onclick="document.getElementById('websiteFileInput').click()">📁 Select Files (HTML, CSS, JS, etc)</button>
-          <p style="color:#5a544c; font-size:.8rem; margin-top:10px;">HTML, CSS, JavaScript, JSON, Images, Fonts, etc</p>
+          <input type="file" id="websiteFileInput" multiple accept=".html,.css,.js,.json,.xml,.txt,.md,.svg,.woff,.woff2,.jpg,.jpeg,.png,.gif,.webp" style="display:none">
+          <button class="admin-btn admin-btn-primary" type="button" onclick="document.getElementById('websiteFileInput').click()">📁 Select Files</button>
+          <p style="color:#5a544c; font-size:.8rem; margin-top:10px;">HTML, CSS, JS, images, fonts, assets</p>
         </div>
 
         <div id="uploadProgress" class="upload-progress" style="display:none;">
@@ -121,11 +110,11 @@
         </div>
 
         <div id="fileListContainer">
-          <div class="admin-card-title">Selected Files (Edit before upload):</div>
-          <div id="fileList" style="max-height:400px; overflow-y:auto;"></div>
+          <div class="admin-card-title">Selected Files</div>
+          <div id="fileList"></div>
           <div id="uploadActions" style="margin-top:16px; display:none;">
-            <button class="admin-btn admin-btn-primary" id="uploadAllBtn">⬆️ Upload All Files</button>
-            <button class="admin-btn admin-btn-secondary" id="clearFilesBtn">🗑️ Clear</button>
+            <button class="admin-btn admin-btn-primary" id="uploadAllBtn" type="button">⬆️ Upload All</button>
+            <button class="admin-btn admin-btn-secondary" id="clearFilesBtn" type="button">🗑️ Clear</button>
           </div>
         </div>
 
@@ -135,33 +124,31 @@
             <div class="editor-header">
               <span class="editor-title" id="editorFileName">file.html</span>
               <div class="editor-actions">
-                <button id="editorSaveBtn">Save Changes</button>
-                <button id="editorCloseBtn">Close</button>
+                <button type="button" id="editorSaveBtn">Save</button>
+                <button type="button" id="editorCloseBtn">Close</button>
               </div>
             </div>
             <textarea class="file-editor-textarea" id="editorContent"></textarea>
           </div>
-          <button class="admin-btn admin-btn-secondary" id="editorPreviewBtn" style="margin-top:10px;">👁️ Preview in Browser</button>
+          <button class="admin-btn admin-btn-secondary" type="button" id="editorPreviewBtn">👁️ Preview</button>
         </div>
       </div>
     </div>
 
-    <!-- PROFILE TAB (NEW) -->
     <div class="admin-tab-panel" id="tab-profile">
       <div class="admin-card">
         <div class="admin-card-title">Profile Settings</div>
-        
+
         <div style="margin-bottom:20px;">
           <h3 style="color:#f5f0e8; margin-bottom:10px;">Profile Picture</h3>
           <input type="file" id="profileImageUpload" accept="image/*" style="display:none">
-          <button class="admin-btn admin-btn-primary" onclick="document.getElementById('profileImageUpload').click()">📷 Upload Profile Image</button>
-          <div id="profileImagePreview" class="img-preview-placeholder" style="margin-top:16px; width:200px; height:200px;">👤 No image</div>
-          <p style="color:#5a544c; font-size:.8rem; margin-top:10px;">Max 5MB. Formats: JPG, PNG, WebP, GIF</p>
+          <button class="admin-btn admin-btn-primary" type="button" onclick="document.getElementById('profileImageUpload').click()">📷 Upload Profile Image</button>
+          <div id="profileImagePreview" class="profile-img-placeholder" style="margin-top:16px;">👤 No image</div>
+          <p style="color:#5a544c; font-size:.8rem; margin-top:10px;">Max 5MB (JPG, PNG, WebP, GIF)</p>
         </div>
       </div>
     </div>
 
-    <!-- SETTINGS TAB -->
     <div class="admin-tab-panel" id="tab-settings">
       <div class="admin-card">
         <div class="admin-card-title">Site Settings</div>
@@ -169,10 +156,10 @@
         <div class="admin-form-group"><label class="admin-form-label">Site Description</label><input type="text" class="admin-form-input" id="settingDesc"></div>
         <div class="admin-form-group"><label class="admin-form-label">Email</label><input type="email" class="admin-form-input" id="settingEmail"></div>
         <div class="admin-form-row">
-          <div class="admin-form-group"><label class="admin-form-label">GitHub URL</label><input type="text" class="admin-form-input" id="settingGithub" placeholder="https://github.com/you"></div>
-          <div class="admin-form-group"><label class="admin-form-label">Telegram URL</label><input type="text" class="admin-form-input" id="settingTelegram" placeholder="https://t.me/you"></div>
+          <div class="admin-form-group"><label class="admin-form-label">GitHub URL</label><input type="text" class="admin-form-input" id="settingGithub"></div>
+          <div class="admin-form-group"><label class="admin-form-label">Telegram URL</label><input type="text" class="admin-form-input" id="settingTelegram"></div>
         </div>
-        <button class="admin-btn admin-btn-primary" id="saveSettings">Save Settings</button>
+        <button class="admin-btn admin-btn-primary" id="saveSettings" type="button">Save Settings</button>
       </div>
     </div>
   </main>
@@ -180,27 +167,44 @@
 
 <div class="admin-toast-container" id="toastContainer"></div>
 
-<!-- PROJECT MODAL -->
 <div class="admin-modal-overlay" id="projectModal">
   <div class="admin-modal">
-    <div class="admin-modal-header"><h3 class="admin-modal-title" id="modalTitle">Add Project</h3><button class="admin-modal-close" id="closeModal">&times;</button></div>
+    <div class="admin-modal-header">
+      <h3 class="admin-modal-title" id="modalTitle">Add Project</h3>
+      <button class="admin-modal-close" id="closeModal" type="button">&times;</button>
+    </div>
     <div class="admin-modal-body">
       <form id="projectForm">
         <div class="admin-form-row">
-          <div class="admin-form-group"><label class="admin-form-label">Project Title *</label><input type="text" class="admin-form-input" id="projectTitle" required placeholder="e.g. NU Assignment Cover"></div>
-          <div class="admin-form-group"><label class="admin-form-label">Category *</label><select class="admin-form-select" id="projectCategory" required><option value="Web App">Web App</option><option value="Tool">Tool</option><option value="IoT">IoT</option><option value="Other">Other</option></select></div>
+          <div class="admin-form-group"><label class="admin-form-label">Project Title *</label><input type="text" class="admin-form-input" id="projectTitle" required></div>
+          <div class="admin-form-group"><label class="admin-form-label">Category *</label>
+            <select class="admin-form-select" id="projectCategory" required>
+              <option value="Web App">Web App</option>
+              <option value="Tool">Tool</option>
+              <option value="IoT">IoT</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
         </div>
-        <div class="admin-form-group"><label class="admin-form-label">Description *</label><textarea class="admin-form-textarea" id="projectDesc" required placeholder="Short description..."></textarea></div>
+
+        <div class="admin-form-group"><label class="admin-form-label">Description *</label><textarea class="admin-form-textarea" id="projectDesc" required></textarea></div>
+
         <div class="admin-form-row">
-          <div class="admin-form-group"><label class="admin-form-label">Status</label><select class="admin-form-select" id="projectStatus"><option value="live">Live</option><option value="wip">Work in Progress</option></select></div>
-          <div class="admin-form-group"><label class="admin-form-label">External Link (optional)</label><input type="text" class="admin-form-input" id="projectUrl" placeholder="https://..."></div>
+          <div class="admin-form-group"><label class="admin-form-label">Status</label>
+            <select class="admin-form-select" id="projectStatus">
+              <option value="live">Live</option>
+              <option value="wip">Work in Progress</option>
+            </select>
+          </div>
+          <div class="admin-form-group"><label class="admin-form-label">External Link</label><input type="text" class="admin-form-input" id="projectUrl" placeholder="https://..."></div>
         </div>
-        <div class="admin-form-group"><label class="admin-form-label">Local File (optional)</label><input type="text" class="admin-form-input" id="projectFile" placeholder="e.g. index1.html (inside projects folder)"></div>
-        <div class="admin-form-group"><label class="admin-form-label">Tags (comma separated)</label><input type="text" class="admin-form-input" id="projectTags" placeholder="html, css, javascript"></div>
+
+        <div class="admin-form-group"><label class="admin-form-label">Local File</label><input type="text" class="admin-form-input" id="projectFile" placeholder="e.g. project/index.html"></div>
+        <div class="admin-form-group"><label class="admin-form-label">Tags</label><input type="text" class="admin-form-input" id="projectTags" placeholder="html, css, javascript"></div>
         <div class="admin-form-group"><label class="admin-form-label">Thumbnail Image</label><input type="file" class="admin-form-input" id="projectImage" accept="image/*"><div id="imagePreview" class="img-preview-placeholder">📷 No image selected</div></div>
       </form>
     </div>
-    <div class="admin-modal-footer"><button class="admin-btn admin-btn-secondary" id="cancelProject">Cancel</button><button class="admin-btn admin-btn-primary" id="saveProject">Save & Publish</button></div>
+    <div class="admin-modal-footer"><button class="admin-btn admin-btn-secondary" id="cancelProject" type="button">Cancel</button><button class="admin-btn admin-btn-primary" id="saveProject" type="button">Save & Publish</button></div>
   </div>
 </div>
 
