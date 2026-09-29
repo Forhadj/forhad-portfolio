@@ -7,6 +7,38 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css">
+<style>
+  .upload-file-item { background:#1c1813; border:1px solid #2a2520; border-radius:8px; padding:12px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; }
+  .file-item-name { flex:1; font-family:'JetBrains Mono'; font-size:.8rem; color:#b8b0a4; }
+  .file-item-actions { display:flex; gap:8px; }
+  .file-item-btn { padding:4px 10px; font-size:.7rem; border-radius:4px; border:none; cursor:pointer; transition:all .2s; }
+  .file-item-preview { background:#ffb238; color:#080705; }
+  .file-item-preview:hover { background:#fbbf24; }
+  .file-item-edit { background:#2a2520; color:#b8b0a4; border:1px solid #ffb238; }
+  .file-item-edit:hover { background:#3a3520; }
+  .file-item-delete { background:#e85d5d; color:#f5f0e8; }
+  .file-item-delete:hover { background:#d94d4d; }
+  
+  .code-editor { background:#1c1813; border:1px solid #2a2520; border-radius:8px; padding:12px; margin-bottom:16px; }
+  .editor-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #2a2520; }
+  .editor-title { font-family:'JetBrains Mono'; font-size:.85rem; color:#ffb238; }
+  .editor-actions { display:flex; gap:8px; }
+  .editor-actions button { padding:6px 12px; font-size:.7rem; border-radius:4px; border:1px solid #2a2520; background:transparent; color:#b8b0a4; cursor:pointer; }
+  .editor-actions button:hover { border-color:#ffb238; color:#ffb238; }
+  
+  .file-editor-textarea { width:100%; min-height:300px; background:#080705; border:1px solid #2a2520; border-radius:6px; padding:12px; color:#b8b0a4; font-family:'JetBrains Mono'; font-size:.8rem; resize:vertical; }
+  .file-editor-textarea:focus { border-color:#ffb238; outline:none; }
+  
+  .preview-frame { width:100%; height:500px; border:1px solid #2a2520; border-radius:8px; background:#fff; }
+  
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+  
+  .upload-progress { background:#16130e; border:1px solid #2a2520; border-radius:8px; padding:16px; margin-bottom:16px; }
+  .progress-bar { width:100%; height:8px; background:#1c1813; border-radius:4px; overflow:hidden; margin-bottom:8px; }
+  .progress-fill { height:100%; background:linear-gradient(90deg, #ffb238, #fbbf24); width:0%; transition:width .3s; }
+  .progress-text { font-size:.8rem; color:#b8b0a4; }
+</style>
 </head>
 <body class="admin-body">
 <button class="admin-mobile-toggle" id="mobileToggle">&#9776;</button>
@@ -19,6 +51,8 @@
       <div class="admin-nav-title">Main</div>
       <button class="admin-nav-link active" data-tab="dashboard">&#128202; Dashboard</button>
       <button class="admin-nav-link" data-tab="projects">&#128295; Projects</button>
+      <button class="admin-nav-link" data-tab="upload">&#128190; Web Upload</button>
+      <button class="admin-nav-link" data-tab="profile">&#128100; Profile</button>
       <button class="admin-nav-link" data-tab="settings">&#9881; Settings</button>
     </div>
     <div class="admin-nav-section">
@@ -26,12 +60,14 @@
       <button class="admin-nav-link" id="logoutBtn">&#8592; Logout</button>
     </div>
   </aside>
+
   <main class="admin-main">
     <div class="admin-topbar">
       <h1 class="admin-page-title" id="pageTitle">Dashboard</h1>
       <div class="admin-user-pill"><span>&#128100;</span><span id="adminUser">admin</span></div>
     </div>
 
+    <!-- DASHBOARD TAB -->
     <div class="admin-tab-panel active" id="tab-dashboard">
       <div class="admin-stats-grid">
         <div class="admin-stat-card"><div class="admin-stat-value" id="statTotal">0</div><div class="admin-stat-label">Total Projects</div></div>
@@ -53,6 +89,7 @@
       </div>
     </div>
 
+    <!-- PROJECTS TAB -->
     <div class="admin-tab-panel" id="tab-projects">
       <div class="admin-card">
         <div class="admin-card-title"><span>All Projects</span><button class="admin-btn admin-btn-primary" id="addProjectBtn">+ Add Project</button></div>
@@ -67,6 +104,64 @@
       </div>
     </div>
 
+    <!-- WEB UPLOAD TAB (NEW) -->
+    <div class="admin-tab-panel" id="tab-upload">
+      <div class="admin-card">
+        <div class="admin-card-title">Upload Website Files</div>
+        
+        <div style="margin-bottom:20px; padding:20px; background:#1c1813; border:2px dashed #2a2520; border-radius:8px; text-align:center;">
+          <input type="file" id="websiteFileInput" multiple accept=".html,.css,.js,.json,.xml,.txt,.md,.svg,.woff,.woff2" style="display:none">
+          <button class="admin-btn admin-btn-primary" onclick="document.getElementById('websiteFileInput').click()">📁 Select Files (HTML, CSS, JS, etc)</button>
+          <p style="color:#5a544c; font-size:.8rem; margin-top:10px;">HTML, CSS, JavaScript, JSON, Images, Fonts, etc</p>
+        </div>
+
+        <div id="uploadProgress" class="upload-progress" style="display:none;">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-text"><span id="progressText">0%</span> - <span id="progressFile">Starting...</span></div>
+        </div>
+
+        <div id="fileListContainer">
+          <div class="admin-card-title">Selected Files (Edit before upload):</div>
+          <div id="fileList" style="max-height:400px; overflow-y:auto;"></div>
+          <div id="uploadActions" style="margin-top:16px; display:none;">
+            <button class="admin-btn admin-btn-primary" id="uploadAllBtn">⬆️ Upload All Files</button>
+            <button class="admin-btn admin-btn-secondary" id="clearFilesBtn">🗑️ Clear</button>
+          </div>
+        </div>
+
+        <div id="editorContainer" style="display:none; margin-top:20px;">
+          <div class="admin-card-title">File Editor</div>
+          <div class="code-editor">
+            <div class="editor-header">
+              <span class="editor-title" id="editorFileName">file.html</span>
+              <div class="editor-actions">
+                <button id="editorSaveBtn">Save Changes</button>
+                <button id="editorCloseBtn">Close</button>
+              </div>
+            </div>
+            <textarea class="file-editor-textarea" id="editorContent"></textarea>
+          </div>
+          <button class="admin-btn admin-btn-secondary" id="editorPreviewBtn" style="margin-top:10px;">👁️ Preview in Browser</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE TAB (NEW) -->
+    <div class="admin-tab-panel" id="tab-profile">
+      <div class="admin-card">
+        <div class="admin-card-title">Profile Settings</div>
+        
+        <div style="margin-bottom:20px;">
+          <h3 style="color:#f5f0e8; margin-bottom:10px;">Profile Picture</h3>
+          <input type="file" id="profileImageUpload" accept="image/*" style="display:none">
+          <button class="admin-btn admin-btn-primary" onclick="document.getElementById('profileImageUpload').click()">📷 Upload Profile Image</button>
+          <div id="profileImagePreview" class="img-preview-placeholder" style="margin-top:16px; width:200px; height:200px;">👤 No image</div>
+          <p style="color:#5a544c; font-size:.8rem; margin-top:10px;">Max 5MB. Formats: JPG, PNG, WebP, GIF</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
     <div class="admin-tab-panel" id="tab-settings">
       <div class="admin-card">
         <div class="admin-card-title">Site Settings</div>
@@ -85,6 +180,7 @@
 
 <div class="admin-toast-container" id="toastContainer"></div>
 
+<!-- PROJECT MODAL -->
 <div class="admin-modal-overlay" id="projectModal">
   <div class="admin-modal">
     <div class="admin-modal-header"><h3 class="admin-modal-title" id="modalTitle">Add Project</h3><button class="admin-modal-close" id="closeModal">&times;</button></div>
@@ -92,23 +188,24 @@
       <form id="projectForm">
         <div class="admin-form-row">
           <div class="admin-form-group"><label class="admin-form-label">Project Title *</label><input type="text" class="admin-form-input" id="projectTitle" required placeholder="e.g. NU Assignment Cover"></div>
-          <div class="admin-form-group"><label class="admin-form-label">Category *</label><select class="admin-form-select" id="projectCategory" required><option value="Web App">Web App</option><option value="Tool">Tool</option><option value="IoT">IoT</option><option value="Blog">Blog</option><option value="Other">Other</option></select></div>
+          <div class="admin-form-group"><label class="admin-form-label">Category *</label><select class="admin-form-select" id="projectCategory" required><option value="Web App">Web App</option><option value="Tool">Tool</option><option value="IoT">IoT</option><option value="Other">Other</option></select></div>
         </div>
         <div class="admin-form-group"><label class="admin-form-label">Description *</label><textarea class="admin-form-textarea" id="projectDesc" required placeholder="Short description..."></textarea></div>
         <div class="admin-form-row">
           <div class="admin-form-group"><label class="admin-form-label">Status</label><select class="admin-form-select" id="projectStatus"><option value="live">Live</option><option value="wip">Work in Progress</option></select></div>
           <div class="admin-form-group"><label class="admin-form-label">External Link (optional)</label><input type="text" class="admin-form-input" id="projectUrl" placeholder="https://..."></div>
         </div>
-        <div class="admin-form-group"><label class="admin-form-label">Local File (optional)</label><input type="text" class="admin-form-input" id="projectFile" placeholder="e.g. index1.html (inside /projects)"></div>
+        <div class="admin-form-group"><label class="admin-form-label">Local File (optional)</label><input type="text" class="admin-form-input" id="projectFile" placeholder="e.g. index1.html (inside projects folder)"></div>
         <div class="admin-form-group"><label class="admin-form-label">Tags (comma separated)</label><input type="text" class="admin-form-input" id="projectTags" placeholder="html, css, javascript"></div>
-        <div class="admin-form-group"><label class="admin-form-label">Thumbnail Image</label><input type="file" class="admin-form-input" id="projectImage" accept="image/*"><div id="imagePreview" class="img-preview-placeholder">No image selected</div></div>
+        <div class="admin-form-group"><label class="admin-form-label">Thumbnail Image</label><input type="file" class="admin-form-input" id="projectImage" accept="image/*"><div id="imagePreview" class="img-preview-placeholder">📷 No image selected</div></div>
       </form>
     </div>
-    <div class="admin-modal-footer"><button class="admin-btn admin-btn-secondary" id="cancelProject">Cancel</button><button class="admin-btn admin-btn-primary" id="saveProject">Save &amp; Publish</button></div>
+    <div class="admin-modal-footer"><button class="admin-btn admin-btn-secondary" id="cancelProject">Cancel</button><button class="admin-btn admin-btn-primary" id="saveProject">Save & Publish</button></div>
   </div>
 </div>
 
 <script src="../js/github-config.js"></script>
 <script src="admin.js"></script>
+<script src="upload-handler.js"></script>
 </body>
 </html>
