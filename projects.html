@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects | Forhad Hossain</title>
+<meta name="description" content="Portfolio of projects by Forhad Hossain - web apps, tools, and IoT projects.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .projects-hero {
+    padding: 4rem 0;
+    text-align: center;
+  }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+  }
+  .project-card-full {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .project-card-full:hover {
+    border-color: var(--amber);
+    transform: translateY(-4px);
+  }
+  .project-card-img {
+    width: 100%;
+    height: 200px;
+    background: var(--bg-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 3rem;
+  }
+  .project-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .project-card-content {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .project-card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+  .project-card-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    flex: 1;
+  }
+  .project-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+  }
+  .project-card-category {
+    background: var(--bg-accent);
+    color: var(--text-secondary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+  }
+  .project-card-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .status-live {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+  }
+  .status-wip {
+    background: rgba(168, 85, 247, 0.2);
+    color: #a855f7;
+  }
+  .project-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .project-tag {
+    background: var(--bg-accent);
+    color: var(--text-secondary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+  .project-card-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .project-card-actions a, .project-card-actions button {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+  .btn-view {
+    background: var(--amber);
+    color: var(--bg-primary);
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-view:hover {
+    background: #fbbf24;
+  }
+  .projects-filter {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .filter-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-primary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .filter-btn.active {
+    background: var(--amber);
+    color: var(--bg-primary);
+    border-color: var(--amber);
+  }
+  .projects-loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+  }
+  .projects-empty {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+  }
+  .load-more-btn {
+    display: block;
+    margin: 2rem auto;
+    padding: 0.75rem 2rem;
+    background: var(--amber);
+    color: var(--bg-primary);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  .load-more-btn:hover {
+    background: #fbbf24;
+  }
+  .load-more-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>
+</head>
+<body>
+<div id="preloader">
+  <div class="preloader-logo">forhad<span>_</span></div>
+  <div class="preloader-text">Loading projects</div>
+  <div class="preloader-bar"><div class="preloader-fill"></div></div>
+</div>
+<header class="site-header" id="siteHeader">
+  <div class="container nav-container">
+    <a href="index.html" class="nav-logo">forhad<span class="logo-cursor">_</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span class="toggle-line"></span><span class="toggle-line"></span><span class="toggle-line"></span>
+    </button>
+    <nav class="main-nav" id="mainNav">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="projects.html" class="nav-link active">Projects</a></li>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+        <li><a href="admin/login.html" class="btn btn-primary btn-sm">Admin</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="projects-hero">
+  <div class="container">
+    <div class="section-header reveal-up">
+      <div class="section-eyebrow">Portfolio</div>
+      <h1 class="section-title">All <em>Projects</em></h1>
+      <p class="section-subtitle">A complete collection of my work. Scroll to explore everything.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="projects-filter">
+      <button class="filter-btn active" data-filter="all">All Projects</button>
+      <button class="filter-btn" data-filter="Web App">Web Apps</button>
+      <button class="filter-btn" data-filter="Tool">Tools</button>
+      <button class="filter-btn" data-filter="IoT">IoT</button>
+      <button class="filter-btn" data-filter="Other">Other</button>
+    </div>
+
+    <div id="projectsContainer" class="projects-grid"></div>
+    <div id="projectsLoading" class="projects-loading" style="display:none">
+      <p>Loading more projects...</p>
+    </div>
+    <div id="projectsEmpty" class="projects-empty" style="display:none">
+      <p>No projects found.</p>
+    </div>
+    <button id="loadMoreBtn" class="load-more-btn" style="display:none">Load More Projects</button>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">forhad<span style="color:var(--amber)">_</span></div>
+        <p class="footer-desc text-bn">বাংলাদেশ থেকে স্বাধীন ডেভেলপার। কাজে লাগে এমন টুল বানানোই আমার লক্ষ্য।</p>
+        <div class="footer-status"><span class="status-dot"></span> All systems operational</div>
+      </div>
+      <div>
+        <h4 class="footer-nav-title">Navigation</h4>
+        <ul class="footer-nav-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-nav-title">Connect</h4>
+        <ul class="footer-nav-list">
+          <li><a href="https://github.com/Forhadj" target="_blank">GitHub</a></li>
+          <li><a href="#">Telegram</a></li>
+          <li><a href="mailto:forhad@example.com">Email</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>Forhad Hossain. All rights reserved.</p>
+      <p class="footer-credit">Built with GitHub + Netlify</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/github-config.js"></script>
+<script>
+  // Security: CSRF token validation and input sanitization
+  class SecurityManager {
+    static sanitizeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    static validateUrl(url) {
+      try {
+        const parsed = new URL(url);
+        return ['http:', 'https:'].includes(parsed.protocol);
+      } catch {
+        return false;
+      }
+    }
+  }
+
+  class ProjectsManager {
+    constructor() {
+      this.projects = [];
+      this.filteredProjects = [];
+      this.currentFilter = 'all';
+      this.itemsPerPage = 12;
+      this.currentPage = 0;
+      this.init();
+    }
+
+    async init() {
+      await this.loadProjects();
+      this.setupEventListeners();
+      this.renderProjects();
+    }
+
+    async loadProjects() {
+      try {
+        const response = await fetch(`${GITHUB_CONFIG.rawBase}/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/data/projects.json`);
+        if (response.ok) {
+          this.projects = await response.json();
+        } else {
+          this.projects = [];
+        }
+      } catch (error) {
+        console.error('Failed to load projects:', error);
+        this.projects = [];
+      }
+    }
+
+    setupEventListeners() {
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          this.currentFilter = e.target.dataset.filter;
+          this.currentPage = 0;
+          this.renderProjects();
+        });
+      });
+
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', () => {
+          this.currentPage++;
+          this.renderProjects(true);
+        });
+      }
+    }
+
+    filterProjects() {
+      if (this.currentFilter === 'all') {
+        this.filteredProjects = this.projects;
+      } else {
+        this.filteredProjects = this.projects.filter(p => p.category === this.currentFilter);
+      }
+    }
+
+    renderProjects(append = false) {
+      this.filterProjects();
+      const container = document.getElementById('projectsContainer');
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      const loadingDiv = document.getElementById('projectsLoading');
+      const emptyDiv = document.getElementById('projectsEmpty');
+
+      if (this.filteredProjects.length === 0) {
+        container.innerHTML = '';
+        emptyDiv.style.display = 'block';
+        loadMoreBtn.style.display = 'none';
+        return;
+      }
+
+      emptyDiv.style.display = 'none';
+
+      const start = this.currentPage * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      const pageProjects = this.filteredProjects.slice(start, end);
+
+      if (!append) {
+        container.innerHTML = '';
+      }
+
+      pageProjects.forEach(project => {
+        const card = this.createProjectCard(project);
+        container.appendChild(card);
+      });
+
+      const hasMore = end < this.filteredProjects.length;
+      loadMoreBtn.style.display = hasMore ? 'block' : 'none';
+      loadMoreBtn.disabled = false;
+    }
+
+    createProjectCard(project) {
+      const card = document.createElement('div');
+      card.className = 'project-card-full';
+
+      // Sanitize all user inputs
+      const title = SecurityManager.sanitizeHtml(project.title || 'Untitled');
+      const desc = SecurityManager.sanitizeHtml(project.description || '');
+      const category = SecurityManager.sanitizeHtml(project.category || 'Other');
+      const status = project.status || 'live';
+      const tags = (project.tags || []).map(t => SecurityManager.sanitizeHtml(t));
+
+      let imageHtml = `<div class="project-card-img">📦</div>`;
+      if (project.image) {
+        const imagePath = SecurityManager.sanitizeHtml(project.image);
+        imageHtml = `<div class="project-card-img"><img src="${imagePath}" alt="${title}" loading="lazy"></div>`;
+      }
+
+      let actionsHtml = '';
+      if (project.url && SecurityManager.validateUrl(project.url)) {
+        actionsHtml += `<a href="${project.url}" target="_blank" rel="noopener noreferrer" class="btn-view">View Live</a>`;
+      }
+      if (project.file) {
+        const filePath = SecurityManager.sanitizeHtml(project.file);
+        actionsHtml += `<a href="${filePath}" target="_blank" class="btn-view">Open Project</a>`;
+      }
+      if (!actionsHtml) {
+        actionsHtml = `<span style="color: var(--text-muted); text-align: center;">Link coming soon</span>`;
+      }
+
+      const tagsHtml = tags.map(t => `<span class="project-tag">${t}</span>`).join('');
+
+      card.innerHTML = `
+        ${imageHtml}
+        <div class="project-card-content">
+          <h3 class="project-card-title">${title}</h3>
+          <p class="project-card-desc">${desc}</p>
+          <div class="project-card-meta">
+            <span class="project-card-category">${category}</span>
+            <span class="project-card-status status-${status}">${status.toUpperCase()}</span>
+          </div>
+          <div class="project-card-tags">${tagsHtml}</div>
+          <div class="project-card-actions">${actionsHtml}</div>
+        </div>
+      `;
+
+      return card;
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      new ProjectsManager();
+    });
+  } else {
+    new ProjectsManager();
+  }
+</script>
+</body>
+</html>
