@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login | Forhad Hossain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="login-body">
+<div class="login-box">
+  <div class="login-logo">forhad_admin<span style="color:#ffb238">_</span></div>
+  <p class="login-sub">GitHub-powered Control Panel</p>
+  <form id="loginForm">
+    <div class="login-form-group">
+      <label class="login-form-label">GitHub Username</label>
+      <input type="text" id="username" class="login-form-input" placeholder="your-github-username" required autocomplete="username">
+    </div>
+    <div class="login-form-group">
+      <label class="login-form-label">Personal Access Token</label>
+      <input type="password" id="token" class="login-form-input" placeholder="ghp_xxxxxxxxxxxx" required autocomplete="off">
+    </div>
+    <button type="submit" class="login-btn" id="loginBtn">Connect to GitHub</button>
+    <div class="login-error" id="loginError"></div>
+  </form>
+  <p style="text-align:center;color:#5a544c;font-size:.72rem;margin-top:20px;line-height:1.6">
+    Token is stored only in this browser's localStorage.<br>
+    It is never sent anywhere except api.github.com
+  </p>
+  <p style="text-align:center;font-size:.72rem;margin-top:14px">
+    <a href="#" id="helpLink" style="color:#b87a1a">How to create a token?</a>
+  </p>
+  <div id="helpBox" style="display:none;margin-top:14px;background:#1c1813;border:1px solid #2a2520;border-radius:8px;padding:14px;font-size:.78rem;color:#b8b0a4;line-height:1.7">
+    1. GitHub &rarr; Settings &rarr; Developer settings<br>
+    2. Personal access tokens &rarr; Fine-grained tokens<br>
+    3. Generate new token<br>
+    4. Repository access: <b>Only select repositories</b> &rarr; your portfolio repo<br>
+    5. Permissions &rarr; Repository permissions &rarr; <b>Contents: Read and write</b><br>
+    6. Copy the <code>github_pat_...</code> or <code>ghp_...</code> token here
+  </div>
+</div>
+
+<script>
+document.getElementById('helpLink').addEventListener('click', function(e){
+  e.preventDefault();
+  var b = document.getElementById('helpBox');
+  b.style.display = b.style.display === 'none' ? 'block' : 'none';
+});
+
+document.getElementById('loginForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const u = document.getElementById('username').value.trim();
+  const t = document.getElementById('token').value.trim();
+  const err = document.getElementById('loginError');
+  const btn = document.getElementById('loginBtn');
+
+  err.textContent = '';
+  btn.textContent = 'Verifying...';
+
+  try {
+    const res = await fetch('https://api.github.com/user', {
+      headers: { 'Authorization': 'token ' + t, 'Accept': 'application/vnd.github+json' }
+    });
+    if (!res.ok) throw new Error('Token invalid or expired');
+    const user = await res.json();
+    localStorage.setItem('fp_gh_session', JSON.stringify({ user: user.login, token: t, time: Date.now() }));
+    location.href = 'index.html';
+  } catch(ex) {
+    err.textContent = ex.message || 'Login failed';
+    btn.textContent = 'Connect to GitHub';
+  }
+});
+</script>
+</body>
+</html>

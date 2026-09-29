@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | Forhad Hossain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="admin-body">
+<button class="admin-mobile-toggle" id="mobileToggle">&#9776;</button>
+<div class="admin-sidebar-overlay" id="sidebarOverlay"></div>
+<div class="admin-layout">
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="admin-logo">forhad_admin_</div>
+    <div class="admin-sub">GitHub CMS</div>
+    <div class="admin-nav-section">
+      <div class="admin-nav-title">Main</div>
+      <button class="admin-nav-link active" data-tab="dashboard">&#128202; Dashboard</button>
+      <button class="admin-nav-link" data-tab="projects">&#128295; Projects</button>
+      <button class="admin-nav-link" data-tab="settings">&#9881; Settings</button>
+    </div>
+    <div class="admin-nav-section">
+      <div class="admin-nav-title">Account</div>
+      <button class="admin-nav-link" id="logoutBtn">&#8592; Logout</button>
+    </div>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1 class="admin-page-title" id="pageTitle">Dashboard</h1>
+      <div class="admin-user-pill"><span>&#128100;</span><span id="adminUser">admin</span></div>
+    </div>
+
+    <div class="admin-tab-panel active" id="tab-dashboard">
+      <div class="admin-stats-grid">
+        <div class="admin-stat-card"><div class="admin-stat-value" id="statTotal">0</div><div class="admin-stat-label">Total Projects</div></div>
+        <div class="admin-stat-card"><div class="admin-stat-value" id="statLive">0</div><div class="admin-stat-label">Live</div></div>
+        <div class="admin-stat-card"><div class="admin-stat-value" id="statWip">0</div><div class="admin-stat-label">Work in Progress</div></div>
+        <div class="admin-stat-card"><div class="admin-stat-value" id="statImg">0</div><div class="admin-stat-label">With Image</div></div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-title">Recent Projects</div>
+        <div id="recentProjects"><div class="admin-empty-state">No projects yet.</div></div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-title" style="display:block">How it works</div>
+        <p style="color:#b8b0a4;font-size:.88rem;line-height:1.8">
+          Every save here commits straight to your GitHub repo. Netlify detects the push
+          and rebuilds the site automatically (usually 20&ndash;40 seconds). After that,
+          <b style="color:#ffb238">every visitor around the world sees your new content.</b>
+        </p>
+      </div>
+    </div>
+
+    <div class="admin-tab-panel" id="tab-projects">
+      <div class="admin-card">
+        <div class="admin-card-title"><span>All Projects</span><button class="admin-btn admin-btn-primary" id="addProjectBtn">+ Add Project</button></div>
+        <div style="margin-bottom:16px"><input type="text" class="admin-search-box" id="adminProjectSearch" placeholder="Search projects..."></div>
+        <div style="overflow-x:auto">
+          <table class="admin-table">
+            <thead><tr><th>Thumbnail</th><th>Title</th><th>Category</th><th>Status</th><th>Tags</th><th>Actions</th></tr></thead>
+            <tbody id="projectsTableBody"></tbody>
+          </table>
+        </div>
+        <div id="projectsEmpty" class="admin-empty-state" style="display:none">No projects found.</div>
+      </div>
+    </div>
+
+    <div class="admin-tab-panel" id="tab-settings">
+      <div class="admin-card">
+        <div class="admin-card-title">Site Settings</div>
+        <div class="admin-form-group"><label class="admin-form-label">Site Title</label><input type="text" class="admin-form-input" id="settingTitle"></div>
+        <div class="admin-form-group"><label class="admin-form-label">Site Description</label><input type="text" class="admin-form-input" id="settingDesc"></div>
+        <div class="admin-form-group"><label class="admin-form-label">Email</label><input type="email" class="admin-form-input" id="settingEmail"></div>
+        <div class="admin-form-row">
+          <div class="admin-form-group"><label class="admin-form-label">GitHub URL</label><input type="text" class="admin-form-input" id="settingGithub" placeholder="https://github.com/you"></div>
+          <div class="admin-form-group"><label class="admin-form-label">Telegram URL</label><input type="text" class="admin-form-input" id="settingTelegram" placeholder="https://t.me/you"></div>
+        </div>
+        <button class="admin-btn admin-btn-primary" id="saveSettings">Save Settings</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="admin-toast-container" id="toastContainer"></div>
+
+<div class="admin-modal-overlay" id="projectModal">
+  <div class="admin-modal">
+    <div class="admin-modal-header"><h3 class="admin-modal-title" id="modalTitle">Add Project</h3><button class="admin-modal-close" id="closeModal">&times;</button></div>
+    <div class="admin-modal-body">
+      <form id="projectForm">
+        <div class="admin-form-row">
+          <div class="admin-form-group"><label class="admin-form-label">Project Title *</label><input type="text" class="admin-form-input" id="projectTitle" required placeholder="e.g. NU Assignment Cover"></div>
+          <div class="admin-form-group"><label class="admin-form-label">Category *</label><select class="admin-form-select" id="projectCategory" required><option value="Web App">Web App</option><option value="Tool">Tool</option><option value="IoT">IoT</option><option value="Blog">Blog</option><option value="Other">Other</option></select></div>
+        </div>
+        <div class="admin-form-group"><label class="admin-form-label">Description *</label><textarea class="admin-form-textarea" id="projectDesc" required placeholder="Short description..."></textarea></div>
+        <div class="admin-form-row">
+          <div class="admin-form-group"><label class="admin-form-label">Status</label><select class="admin-form-select" id="projectStatus"><option value="live">Live</option><option value="wip">Work in Progress</option></select></div>
+          <div class="admin-form-group"><label class="admin-form-label">External Link (optional)</label><input type="text" class="admin-form-input" id="projectUrl" placeholder="https://..."></div>
+        </div>
+        <div class="admin-form-group"><label class="admin-form-label">Local File (optional)</label><input type="text" class="admin-form-input" id="projectFile" placeholder="e.g. index1.html (inside /projects)"></div>
+        <div class="admin-form-group"><label class="admin-form-label">Tags (comma separated)</label><input type="text" class="admin-form-input" id="projectTags" placeholder="html, css, javascript"></div>
+        <div class="admin-form-group"><label class="admin-form-label">Thumbnail Image</label><input type="file" class="admin-form-input" id="projectImage" accept="image/*"><div id="imagePreview" class="img-preview-placeholder">No image selected</div></div>
+      </form>
+    </div>
+    <div class="admin-modal-footer"><button class="admin-btn admin-btn-secondary" id="cancelProject">Cancel</button><button class="admin-btn admin-btn-primary" id="saveProject">Save &amp; Publish</button></div>
+  </div>
+</div>
+
+<script src="../js/github-config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
